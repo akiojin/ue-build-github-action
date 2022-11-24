@@ -23,7 +23,7 @@
   "homepage": "https://github.com/cloud-creative-studios/ue-build-github-action#readme",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@akiojin/p4-command": "^0.1.0",
+    "@akiojin/p4-command": "^0.1.1",
     "@types/glob": "8.0.0"
   },
   "devDependencies": {
