@@ -11,16 +11,12 @@ async function Run(): Promise<void>
             throw new Error('Not supported platform.')
         }
 
-        const project = path.join(
-            core.getInput('project-directory'),
-            `${core.getInput('project-name')}.uproject`)
-
         const enablePackage = core.getBooleanInput('enable-package')
 
         if (!!enablePackage) {
             core.startGroup('UE Build')
             await UE.BuildCookRun(
-                `"${project}"`,
+                `"${core.getInput('project-directory')}"`,
                 core.getInput('build-target'),
                 core.getInput('configuration'),
                 enablePackage)

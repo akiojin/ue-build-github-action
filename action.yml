@@ -1,10 +1,6 @@
 name: 'ue-build-github-action'
 description: 'Setup Perforce GitHub action'
 inputs:
-  project-name:
-    description: >
-      Open the project at the given path. If the pathname contains spaces, enclose it in quotes.
-    required: true
   project-directory:
     description: >
       Open the project at the given path. If the pathname contains spaces, enclose it in quotes.
@@ -13,7 +9,8 @@ inputs:
   ue-version:
     description: >
       Specify the UE version to be used.
-      ex) UE_4.27, UE_5.10
+      If 'project' is specified, the specified version from the target uproject is used.
+      ex) UE_4.27, UE_5.10, project
     required: true
   ue-install-directory:
     description: >

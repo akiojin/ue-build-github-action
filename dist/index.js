@@ -4117,11 +4117,10 @@ async function Run() {
         if (!IsWindows) {
             throw new Error('Not supported platform.');
         }
-        const project = path_1.default.join(core.getInput('project-directory'), `${core.getInput('project-name')}.uproject`);
         const enablePackage = core.getBooleanInput('enable-package');
         if (!!enablePackage) {
             core.startGroup('UE Build');
-            await ue_command_1.default.BuildCookRun(`"${project}"`, core.getInput('build-target'), core.getInput('configuration'), enablePackage);
+            await ue_command_1.default.BuildCookRun(`"${core.getInput('project-directory')}"`, core.getInput('build-target'), core.getInput('configuration'), enablePackage);
             core.endGroup();
             core.startGroup('Archive');
             await ue_command_1.default.Archive(core.getInput('package-path'), [path_1.default.join(core.getInput('project-directory'), 'Saved', 'StagedBuilds')], Number(core.getInput('compression')));
@@ -4172,18 +4171,66 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(810));
 const exec = __importStar(__nccwpck_require__(222));
 const path_1 = __importDefault(__nccwpck_require__(17));
+const glob_1 = __importDefault(__nccwpck_require__(841));
+const fs_1 = __nccwpck_require__(147);
 const argument_builder_1 = __nccwpck_require__(57);
 class UE {
+    /**
+     * Returns the path of the first *.uproject found in the specified directory
+     *
+     * @param projectDirectory Directory path to search
+     * @returns Full path of the searched *.uproject
+     */
+    static FindUProject(projectDirectory) {
+        let result = '';
+        const options = {
+            root: projectDirectory,
+            absolute: true,
+        };
+        (0, glob_1.default)('*.uproject', options, function (error, files) {
+            if (error) {
+                return;
+            }
+            result = files[0];
+        });
+        return result;
+    }
+    /**
+     * Returns the UE installation directory path.
+     * If a path is specified in `ue-install-directory`, return it.
+     * If not specified, the default installation directory path is returned.
+     *
+     * @returns UE installation directory path
+     */
     static GetUEInstallDirectory() {
         return core.getInput('ue-install-directory') || 'C:\\Program Files\\Epic Games';
     }
-    static GetRunUATPath() {
-        return `"${path_1.default.join(UE.GetUEInstallDirectory(), core.getInput('ue-version'), 'Engine', 'Build', 'BatchFiles', 'RunUAT.bat')}"`;
+    static async GetRunUATPath() {
+        let version = core.getInput('ue-version');
+        if (version === 'project') {
+            version = `UE_${await UE.GetVersion(UE.FindUProject(core.getInput('project-directory')))}`;
+        }
+        return `"${path_1.default.join(UE.GetUEInstallDirectory(), version, 'Engine', 'Build', 'BatchFiles', 'RunUAT.bat')}"`;
     }
-    static async BuildCookRun(project, platform, configuration, outputPackage) {
+    /**
+     * Returns the version of UE used in a given project.
+     * The UE version is obtained from *.uproject.
+     *
+     * @param project UE project path
+     * @returns UE version (e.g. 4.27)
+     */
+    static async GetVersion(project) {
+        const text = await fs_1.promises.readFile(project, 'utf-8');
+        const result = text.match(/EngineAssociation": "(?<version>[0-9.]*)"/i);
+        if (result === null || result.groups == null) {
+            throw new Error('Invalid uproject');
+        }
+        return result.groups.version;
+    }
+    static async BuildCookRun(projectDirectory, platform, configuration, outputPackage) {
         const builder = new argument_builder_1.ArgumentBuilder()
             .Append('BuildCookRun')
-            .Append(`-project=${project}`)
+            .Append(`-project=${UE.FindUProject(projectDirectory)}`)
             .Append('-noP4')
             .Append('-cook')
             .Append('-allmap')
@@ -4195,7 +4242,7 @@ class UE {
         if (!!outputPackage) {
             builder.Append('-pak');
         }
-        await exec.exec(UE.GetRunUATPath(), builder.Build());
+        await exec.exec(await UE.GetRunUATPath(), builder.Build());
     }
     static async Archive(output, inputs, compression = 5) {
         const builder = new argument_builder_1.ArgumentBuilder()
@@ -4205,10 +4252,18 @@ class UE {
         inputs.forEach(input => {
             builder.Append(`-add=${input}`);
         });
-        await exec.exec(UE.GetRunUATPath(), builder.Build());
+        await exec.exec(await UE.GetRunUATPath(), builder.Build());
     }
 }
 exports["default"] = UE;
+
+
+/***/ }),
+
+/***/ 841:
+/***/ ((module) => {
+
+module.exports = eval("require")("glob");
 
 
 /***/ }),

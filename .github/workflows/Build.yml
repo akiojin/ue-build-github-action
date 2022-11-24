@@ -7,7 +7,6 @@ jobs:
   Build:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -17,3 +16,15 @@ jobs:
       - name: ncc build
         run: |
           npx @vercel/ncc build src/main.ts
+
+  Test:
+    runs-on: windows-latest
+    needs: Build
+    timeout-minutes: 5
+    steps:
+      - uses: ./
+        with:
+          project-name: UE
+          project-directory: ${{ github.workspace }}\UE
+          ue-version: project
+          build-target: Win64
