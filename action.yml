@@ -46,7 +46,7 @@ inputs:
     description: >
       パッケージ化したファイルを出力するパス。
     required: false
-    default: ${{ github.workspace }}\${{ github.run_number }}.zip
+    default: ${{ runner.temp }}\${{ github.run_number }}.zip
   compression:
     description: >
       Compression Level 0-Copy 9-Best Compression
