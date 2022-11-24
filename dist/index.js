@@ -4117,11 +4117,11 @@ async function Run() {
         if (!IsWindows) {
             throw new Error('Not supported platform.');
         }
-        const project = path_1.default.join(core.getInput('project-directory'), core.getInput('project-name'));
-        const outputPackage = core.getBooleanInput('output-package');
-        if (!!outputPackage) {
-            await ue_command_1.default.BuildCookRun(project, core.getInput('platform'), core.getInput('configuration'), outputPackage);
-            await ue_command_1.default.Archive(core.getInput('output-package-path'), [path_1.default.join(core.getInput('project-directory'), 'Saved', 'StagedBuilds')], Number(core.getInput('compression')));
+        const project = path_1.default.join(core.getInput('project-directory'), `${core.getInput('project-name')}.uproject`);
+        const enablePackage = core.getBooleanInput('enable-package');
+        if (!!enablePackage) {
+            await ue_command_1.default.BuildCookRun(`"${project}"`, core.getInput('build-target'), core.getInput('configuration'), enablePackage);
+            await ue_command_1.default.Archive(core.getInput('package-path'), [path_1.default.join(core.getInput('project-directory'), 'Saved', 'StagedBuilds')], Number(core.getInput('compression')));
         }
     }
     catch (ex) {
