@@ -1,4 +1,4 @@
-name: 'setup-perforce-github-action'
+name: 'ue-build-github-action'
 description: 'Setup Perforce GitHub action'
 inputs:
   project-name:
