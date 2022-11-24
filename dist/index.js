@@ -4179,7 +4179,7 @@ class UE {
     static async BuildCookRun(project, platform, configuration, outputPackage) {
         const builder = new argument_builder_1.ArgumentBuilder()
             .Append('BuildCookRun')
-            .Append('-project', project)
+            .Append(`-project=${project}`)
             .Append('-noP4')
             .Append('-cook')
             .Append('-allmap')

@@ -26,7 +26,7 @@ export default class UE
     {
         const builder = new ArgumentBuilder()
             .Append('BuildCookRun')
-            .Append('-project', project)
+            .Append(`-project=${project}`)
             .Append('-noP4')
             .Append('-cook')
             .Append('-allmap')
