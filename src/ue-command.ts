@@ -31,6 +31,8 @@ export default class UE
             .Append('-cook')
             .Append('-allmap')
             .Append('-build')
+            .Append('-partialgc')
+            .Append('-stage')
             .Append(`-platform=${platform}`)
             .Append(`-clientconfig=${configuration}`)
 
