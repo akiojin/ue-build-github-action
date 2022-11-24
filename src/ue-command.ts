@@ -12,10 +12,10 @@ export default class UE
 
     static GetRunUATPath(): string
     {
-        return path.join(
+        return `"${path.join(
             UE.GetUEInstallDirectory(),
             core.getInput('ue-version'),
-            'Engine', 'Build', 'BatchFiles', 'RunUAT.bat')
+            'Engine', 'Build', 'BatchFiles', 'RunUAT.bat')}"`
     }
     
     static async BuildCookRun(

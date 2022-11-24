@@ -4174,7 +4174,7 @@ class UE {
         return core.getInput('ue-install-directory') || 'C:\\Program Files\\Epic Games';
     }
     static GetRunUATPath() {
-        return path_1.default.join(UE.GetUEInstallDirectory(), core.getInput('ue-version'), 'Engine', 'Build', 'BatchFiles', 'RunUAT.bat');
+        return `"${path_1.default.join(UE.GetUEInstallDirectory(), core.getInput('ue-version'), 'Engine', 'Build', 'BatchFiles', 'RunUAT.bat')}"`;
     }
     static async BuildCookRun(project, platform, configuration, outputPackage) {
         const builder = new argument_builder_1.ArgumentBuilder()
