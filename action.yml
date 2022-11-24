@@ -1,0 +1,60 @@
+name: 'setup-perforce-github-action'
+description: 'Setup Perforce GitHub action'
+inputs:
+  project-name:
+    description: >
+      Open the project at the given path. If the pathname contains spaces, enclose it in quotes.
+    required: true
+  project-directory:
+    description: >
+      Open the project at the given path. If the pathname contains spaces, enclose it in quotes.
+    required: false
+    default: ${{ github.workspace }}
+  ue-version:
+    description: >
+      Specify the UE version to be used.
+      ex) UE_4.27, UE_5.10
+    required: true
+  ue-install-directory:
+    description: >
+      If the UE installation location is not the default, specify the path in this parameter.
+      The path must exclude the version number.
+      ex) E:\Epic Games\
+  build-target:
+    description: >
+      Allows the selection of an active build target before loading a project.
+      
+      Possible options are:
+      Win64, iOS, Android.
+    required: true
+  configuration:
+    description: >
+      The configuration to use when building the app.
+      Defaults to 'Debug'
+
+      Possible options are:
+      Debug, Development, Shipping.
+    required: false
+    default: 'Debug'
+  enable-package:
+    description: >
+      Do you want to package it?
+      If true, BuildCookRun is executed.
+    required: false
+    default: false
+  package-path:
+    description: >
+      パッケージ化したファイルを出力するパス。
+    required: false
+    default: ${{ github.workspace }}\${{ github.run_number }}.zip
+  compression:
+    description: >
+      Compression Level 0-Copy 9-Best Compression
+    required: false
+    default: 5
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
+branding:
+  icon: "upload-cloud"
+  color: "orange"
