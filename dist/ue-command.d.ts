@@ -2,7 +2,7 @@ export default class UE {
     /**
      * Returns the path of the first *.uproject found in the specified directory
      *
-     * @returns Full path of the searched *.uproject
+     * @returns Full path of the searched *.uproject (full path)
      */
     static GetUProjectPath(): Promise<string>;
     /**

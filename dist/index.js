@@ -4177,7 +4177,7 @@ class UE {
     /**
      * Returns the path of the first *.uproject found in the specified directory
      *
-     * @returns Full path of the searched *.uproject
+     * @returns Full path of the searched *.uproject (full path)
      */
     static async GetUProjectPath() {
         core.debug(`Project Directory: ${core.getInput('project-directory')}`);
@@ -4187,7 +4187,7 @@ class UE {
             throw new Error('Not found uproject');
         }
         core.debug(`Find: ${files.length}, First: ${files[0]}`);
-        return files[0];
+        return path_1.default.join(core.getInput('project-directory'), files[0]);
     }
     /**
      * Returns the UE installation directory path.
