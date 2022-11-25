@@ -5,7 +5,7 @@ export default class UE {
      * @param projectDirectory Directory path to search
      * @returns Full path of the searched *.uproject
      */
-    static FindUProject(projectDirectory: string): string;
+    static FindUProject(projectDirectory: string): Promise<string>;
     /**
      * Returns the UE installation directory path.
      * If a path is specified in `ue-install-directory`, return it.

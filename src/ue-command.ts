@@ -1,7 +1,6 @@
 ﻿import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import path from 'path'
-import glob from 'glob'
 import { promises as fs } from 'fs'
 import { ArgumentBuilder } from '@akiojin/argument-builder'
 
@@ -13,24 +12,11 @@ export default class UE
      * @param projectDirectory Directory path to search
      * @returns Full path of the searched *.uproject
      */
-    static FindUProject(projectDirectory: string): string
+    static async FindUProject(projectDirectory: string): Promise<string>
     {
-        let result = ''
-
-        const options = {
-            root: projectDirectory,
-            absolute: true,
-        } as glob.IOptions
-
-        glob('*.uproject', options, function (error, files) {
-            if (error) {
-                return;
-            }
-
-            result = files[0]
-        })
-
-        return result;
+        const files = await (await fs.readdir(projectDirectory))
+            .filter(file => file.endsWith('uproject'))
+        return files[0]
     }
 
     /**
@@ -50,7 +36,7 @@ export default class UE
         let version = core.getInput('ue-version');
 
         if (version === 'project') {
-            version = `UE_${await UE.GetVersion(UE.FindUProject(core.getInput('project-directory')))}`
+            version = `UE_${await UE.GetVersion(await UE.FindUProject(core.getInput('project-directory')))}`
         }
 
         return `"${path.join(

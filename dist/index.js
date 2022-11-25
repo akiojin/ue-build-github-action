@@ -4171,7 +4171,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(810));
 const exec = __importStar(__nccwpck_require__(222));
 const path_1 = __importDefault(__nccwpck_require__(17));
-const glob_1 = __importDefault(__nccwpck_require__(841));
 const fs_1 = __nccwpck_require__(147);
 const argument_builder_1 = __nccwpck_require__(57);
 class UE {
@@ -4181,19 +4180,10 @@ class UE {
      * @param projectDirectory Directory path to search
      * @returns Full path of the searched *.uproject
      */
-    static FindUProject(projectDirectory) {
-        let result = '';
-        const options = {
-            root: projectDirectory,
-            absolute: true,
-        };
-        (0, glob_1.default)('*.uproject', options, function (error, files) {
-            if (error) {
-                return;
-            }
-            result = files[0];
-        });
-        return result;
+    static async FindUProject(projectDirectory) {
+        const files = await (await fs_1.promises.readdir(projectDirectory))
+            .filter(file => file.endsWith('uproject'));
+        return files[0];
     }
     /**
      * Returns the UE installation directory path.
@@ -4208,7 +4198,7 @@ class UE {
     static async GetRunUATPath() {
         let version = core.getInput('ue-version');
         if (version === 'project') {
-            version = `UE_${await UE.GetVersion(UE.FindUProject(core.getInput('project-directory')))}`;
+            version = `UE_${await UE.GetVersion(await UE.FindUProject(core.getInput('project-directory')))}`;
         }
         return `"${path_1.default.join(UE.GetUEInstallDirectory(), version, 'Engine', 'Build', 'BatchFiles', 'RunUAT.bat')}"`;
     }
@@ -4256,14 +4246,6 @@ class UE {
     }
 }
 exports["default"] = UE;
-
-
-/***/ }),
-
-/***/ 841:
-/***/ ((module) => {
-
-module.exports = eval("require")("glob");
 
 
 /***/ }),
