@@ -15,11 +15,7 @@ async function Run(): Promise<void>
 
         if (!!enablePackage) {
             core.startGroup('UE Build')
-            await UE.BuildCookRun(
-                core.getInput('project-directory'),
-                core.getInput('build-target'),
-                core.getInput('configuration'),
-                enablePackage)
+            await UE.BuildCookRun()
             core.endGroup()
         
             core.startGroup('Archive')

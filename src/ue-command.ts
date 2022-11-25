@@ -72,15 +72,11 @@ export default class UE
     {
         return `"${path.join(
             UE.GetUEInstallDirectory(),
-            `UE_${await UE.GetUEVersion()}`,
+            await UE.GetUEVersion(),
             'Engine', 'Build', 'BatchFiles', 'RunUAT.bat')}"`
     }
 
-    static async BuildCookRun(
-        projectDirectory: string,
-        platform: string,
-        configuration: string,
-        outputPackage: boolean): Promise<void>
+    static async BuildCookRun(): Promise<void>
     {
         const builder = new ArgumentBuilder()
             .Append('BuildCookRun')
@@ -91,10 +87,10 @@ export default class UE
             .Append('-build')
             .Append('-partialgc')
             .Append('-stage')
-            .Append(`-platform=${platform}`)
-            .Append(`-clientconfig=${configuration}`)
+            .Append(`-platform=${core.getInput('build-target')}`)
+            .Append(`-clientconfig=${core.getInput('configuration')}`)
 
-        if (!!outputPackage) {
+        if (!!core.getBooleanInput('enable-package')) {
             builder.Append('-pak')
         }
 
