@@ -4120,7 +4120,7 @@ async function Run() {
         const enablePackage = core.getBooleanInput('enable-package');
         if (!!enablePackage) {
             core.startGroup('UE Build');
-            await ue_command_1.default.BuildCookRun(core.getInput('project-directory'), core.getInput('build-target'), core.getInput('configuration'), enablePackage);
+            await ue_command_1.default.BuildCookRun();
             core.endGroup();
             core.startGroup('Archive');
             await ue_command_1.default.Archive(core.getInput('package-path'), [path_1.default.join(core.getInput('project-directory'), 'Saved', 'StagedBuilds')], Number(core.getInput('compression')));
@@ -4223,9 +4223,9 @@ class UE {
         return version;
     }
     static async GetRunUATPath() {
-        return `"${path_1.default.join(UE.GetUEInstallDirectory(), `UE_${await UE.GetUEVersion()}`, 'Engine', 'Build', 'BatchFiles', 'RunUAT.bat')}"`;
+        return `"${path_1.default.join(UE.GetUEInstallDirectory(), await UE.GetUEVersion(), 'Engine', 'Build', 'BatchFiles', 'RunUAT.bat')}"`;
     }
-    static async BuildCookRun(projectDirectory, platform, configuration, outputPackage) {
+    static async BuildCookRun() {
         const builder = new argument_builder_1.ArgumentBuilder()
             .Append('BuildCookRun')
             .Append(`-project="${await UE.GetUProjectPath()}"`)
@@ -4235,9 +4235,9 @@ class UE {
             .Append('-build')
             .Append('-partialgc')
             .Append('-stage')
-            .Append(`-platform=${platform}`)
-            .Append(`-clientconfig=${configuration}`);
-        if (!!outputPackage) {
+            .Append(`-platform=${core.getInput('build-target')}`)
+            .Append(`-clientconfig=${core.getInput('configuration')}`);
+        if (!!core.getBooleanInput('enable-package')) {
             builder.Append('-pak');
         }
         await exec.exec(await UE.GetRunUATPath(), builder.Build());

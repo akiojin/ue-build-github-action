@@ -23,6 +23,6 @@ export default class UE {
     static GetUEVersionFromUProject(project: string): Promise<string>;
     static GetUEVersion(): Promise<string>;
     static GetRunUATPath(): Promise<string>;
-    static BuildCookRun(projectDirectory: string, platform: string, configuration: string, outputPackage: boolean): Promise<void>;
+    static BuildCookRun(): Promise<void>;
     static Archive(output: string, inputs: string[], compression?: number): Promise<void>;
 }
