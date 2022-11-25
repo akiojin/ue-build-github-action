@@ -72,7 +72,7 @@ export default class UE
     {
         const builder = new ArgumentBuilder()
             .Append('BuildCookRun')
-            .Append(`-project=${UE.FindUProject(projectDirectory)}`)
+            .Append(`-project="${UE.FindUProject(projectDirectory)}"`)
             .Append('-noP4')
             .Append('-cook')
             .Append('-allmap')

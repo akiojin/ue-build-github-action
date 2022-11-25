@@ -4120,7 +4120,7 @@ async function Run() {
         const enablePackage = core.getBooleanInput('enable-package');
         if (!!enablePackage) {
             core.startGroup('UE Build');
-            await ue_command_1.default.BuildCookRun(`"${core.getInput('project-directory')}"`, core.getInput('build-target'), core.getInput('configuration'), enablePackage);
+            await ue_command_1.default.BuildCookRun(core.getInput('project-directory'), core.getInput('build-target'), core.getInput('configuration'), enablePackage);
             core.endGroup();
             core.startGroup('Archive');
             await ue_command_1.default.Archive(core.getInput('package-path'), [path_1.default.join(core.getInput('project-directory'), 'Saved', 'StagedBuilds')], Number(core.getInput('compression')));
@@ -4220,7 +4220,7 @@ class UE {
     static async BuildCookRun(projectDirectory, platform, configuration, outputPackage) {
         const builder = new argument_builder_1.ArgumentBuilder()
             .Append('BuildCookRun')
-            .Append(`-project=${UE.FindUProject(projectDirectory)}`)
+            .Append(`-project="${UE.FindUProject(projectDirectory)}"`)
             .Append('-noP4')
             .Append('-cook')
             .Append('-allmap')
