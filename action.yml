@@ -6,13 +6,14 @@ inputs:
       Open the project at the given path. If the pathname contains spaces, enclose it in quotes.
     required: false
     default: ${{ github.workspace }}
-  ue-version:
+  version:
     description: >
       Specify the UE version to be used.
       If 'project' is specified, the specified version from the target uproject is used.
       ex) UE_4.27, UE_5.10, project
     required: true
-  ue-install-directory:
+    default: project
+  install-directory:
     description: >
       If the UE installation location is not the default, specify the path in this parameter.
       The path must exclude the version number.

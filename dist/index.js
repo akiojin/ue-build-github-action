@@ -4177,30 +4177,27 @@ class UE {
     /**
      * Returns the path of the first *.uproject found in the specified directory
      *
-     * @param projectDirectory Directory path to search
      * @returns Full path of the searched *.uproject
      */
-    static async FindUProject(projectDirectory) {
-        const files = await (await fs_1.promises.readdir(projectDirectory))
+    static async GetUProjectPath() {
+        core.debug(`Project Directory: ${core.getInput('project-directory')}`);
+        const files = await (await fs_1.promises.readdir(core.getInput('project-directory')))
             .filter(file => file.endsWith('uproject'));
+        if (files.length === 0) {
+            throw new Error('Not found uproject');
+        }
+        core.debug(`Find: ${files.length}, First: ${files[0]}`);
         return files[0];
     }
     /**
      * Returns the UE installation directory path.
-     * If a path is specified in `ue-install-directory`, return it.
+     * If a path is specified in `install-directory`, return it.
      * If not specified, the default installation directory path is returned.
      *
      * @returns UE installation directory path
      */
     static GetUEInstallDirectory() {
-        return core.getInput('ue-install-directory') || 'C:\\Program Files\\Epic Games';
-    }
-    static async GetRunUATPath() {
-        let version = core.getInput('ue-version');
-        if (version === 'project') {
-            version = `UE_${await UE.GetVersion(await UE.FindUProject(core.getInput('project-directory')))}`;
-        }
-        return `"${path_1.default.join(UE.GetUEInstallDirectory(), version, 'Engine', 'Build', 'BatchFiles', 'RunUAT.bat')}"`;
+        return core.getInput('install-directory') || 'C:\\Program Files\\Epic Games';
     }
     /**
      * Returns the version of UE used in a given project.
@@ -4209,7 +4206,7 @@ class UE {
      * @param project UE project path
      * @returns UE version (e.g. 4.27)
      */
-    static async GetVersion(project) {
+    static async GetUEVersionFromUProject(project) {
         const text = await fs_1.promises.readFile(project, 'utf-8');
         const result = text.match(/EngineAssociation": "(?<version>[0-9.]*)"/i);
         if (result === null || result.groups == null) {
@@ -4217,10 +4214,21 @@ class UE {
         }
         return result.groups.version;
     }
+    static async GetUEVersion() {
+        let version = core.getInput('version');
+        if (version === 'project') {
+            const uproject = await UE.GetUProjectPath();
+            version = `UE_${await UE.GetUEVersionFromUProject(uproject)}`;
+        }
+        return version;
+    }
+    static async GetRunUATPath() {
+        return `"${path_1.default.join(UE.GetUEInstallDirectory(), `UE_${await UE.GetUEVersion()}`, 'Engine', 'Build', 'BatchFiles', 'RunUAT.bat')}"`;
+    }
     static async BuildCookRun(projectDirectory, platform, configuration, outputPackage) {
         const builder = new argument_builder_1.ArgumentBuilder()
             .Append('BuildCookRun')
-            .Append(`-project="${UE.FindUProject(projectDirectory)}"`)
+            .Append(`-project="${await UE.GetUProjectPath()}"`)
             .Append('-noP4')
             .Append('-cook')
             .Append('-allmap')
