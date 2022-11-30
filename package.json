@@ -1,29 +1,26 @@
 {
-  "name": "ue-build-github-action",
+  "name": "@akiojin/ue-build-github-action",
   "version": "0.2.6",
   "description": "",
   "main": "dist/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cloud-creative-studios/ue-build-github-action.git"
+    "url": "https://github.com/akiojin/ue-build-github-action.git"
   },
   "keywords": [
-    "actions",
-    "ue",
-    "unreal engine"
+    "UE",
+    "Unreal Engine"
   ],
-  "author": "akiojin",
+  "author": "Akio Jinsenji <akio-jinsenji@cloud-creative-studios.com> (https://github.com/akiojin)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cloud-creative-studios/ue-build-github-action/issues"
+    "url": "https://github.com/akiojin/ue-build-github-action/issues"
   },
-  "homepage": "https://github.com/cloud-creative-studios/ue-build-github-action#readme",
+  "homepage": "https://github.com/akiojin/ue-build-github-action#readme",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@akiojin/p4-command": "^0.1.1"
+    "@actions/exec": "1.1.1",
+    "@akiojin/argument-builder": "1.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.9"
