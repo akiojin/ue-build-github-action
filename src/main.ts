@@ -11,13 +11,11 @@ async function Run(): Promise<void>
             throw new Error('Not supported platform.')
         }
 
-        const enablePackage = core.getBooleanInput('enable-package')
-
-        if (!!enablePackage) {
-            core.startGroup('UE Build')
-            await UE.BuildCookRun()
-            core.endGroup()
-        
+        core.startGroup('UE Build')
+        await UE.BuildCookRun()
+        core.endGroup()
+    
+        if (!!core.getBooleanInput('enable-package')) {
             core.startGroup('Archive')
             await UE.Archive(
                 core.getInput('package-path'),

@@ -42,7 +42,7 @@ inputs:
     default: false
   package-path:
     description: >
-      パッケージ化したファイルを出力するパス。
+      Path to output packaged files.
     required: false
     default: ${{ runner.temp }}\${{ github.run_number }}.zip
   compression:

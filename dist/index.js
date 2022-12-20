@@ -4117,11 +4117,10 @@ async function Run() {
         if (!IsWindows) {
             throw new Error('Not supported platform.');
         }
-        const enablePackage = core.getBooleanInput('enable-package');
-        if (!!enablePackage) {
-            core.startGroup('UE Build');
-            await ue_command_1.default.BuildCookRun();
-            core.endGroup();
+        core.startGroup('UE Build');
+        await ue_command_1.default.BuildCookRun();
+        core.endGroup();
+        if (!!core.getBooleanInput('enable-package')) {
             core.startGroup('Archive');
             await ue_command_1.default.Archive(core.getInput('package-path'), [path_1.default.join(core.getInput('project-directory'), 'Saved', 'StagedBuilds')], Number(core.getInput('compression')));
             core.endGroup();
