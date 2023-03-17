@@ -1,5 +1,5 @@
 name: 'ue-build-github-action'
-description: 'Setup Perforce GitHub action'
+description: 'The action is to build the UE project.'
 inputs:
   project-directory:
     description: >
